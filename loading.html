@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Loading...</title>
+  <style>
+    body { 
+      font-family: Arial, sans-serif; 
+      text-align: center; 
+      padding-top: 50px; 
+    }
+    .spinner {
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid #3498db;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="spinner"></div>
+  <h2>Warming up the server...</h2>
+  <p id="status">Checking backend status.</p>
+
+  <script>
+    const statusEl = document.getElementById('status');
+    const backendUrl = 'https://safestapes.onrender.com/health/';
+    const mainAppUrl = 'https://safestapes.onrender.com';
+
+    function checkBackend() {
+      fetch(backendUrl)
+        .then(response => {
+          if (response.ok) {
+            window.location.href = mainAppUrl;  // Redirect if healthy
+          } else {
+            throw new Error('Backend not ready');
+          }
+        })
+        .catch(() => {
+          statusEl.textContent = 'Backend is waking up (this may take 30 seconds)...';
+          setTimeout(checkBackend, 2000);  // Retry every 2 seconds
+        });
+    }
+
+    // Start checking when page loads
+    checkBackend();
+  </script>
+</body>
+</html>
