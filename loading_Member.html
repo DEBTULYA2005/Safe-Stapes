@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Loading SafeSteps...</title>
+  <style>
+    body { 
+      font-family: Arial, sans-serif; 
+      background: #111; 
+      color: #fff; 
+      text-align: center; 
+      margin-top: 100px;
+    }
+
+    .spinner {
+      margin: 40px auto;
+      width: 50px;
+      height: 50px;
+      border: 5px solid #ddd;
+      border-top: 5px solid #ff4081;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0); }
+      100% { transform: rotate(360deg); }
+    }
+
+    #status {
+      font-size: 18px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Starting Your SafeSteps Dashboard...</h1>
+  <div class="spinner"></div>
+  <div id="status">Waking up our secure servers, please wait...</div>
+
+  <script>
+    const renderURL = "https://safestapes.onrender.com/index02"; // ✅ Change to your real Render URL
+
+    let attempts = 0;
+    const maxAttempts = 10;
+
+    async function checkRenderApp() {
+      while (attempts < maxAttempts) {
+        try {
+          const res = await fetch(renderURL, { mode: 'no-cors' });
+          break; // server responded
+        } catch (e) {
+          // likely still sleeping, just retry
+        }
+        attempts++;
+        document.getElementById("status").innerText = `Attempting to connect... (${attempts})`;
+        await new Promise(r => setTimeout(r, 3000)); // wait 3s
+      }
+
+      window.location.href = renderURL;
+    }
+
+    checkRenderApp();
+  </script>
+</body>
+</html>
